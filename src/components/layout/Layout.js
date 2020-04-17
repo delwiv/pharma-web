@@ -1,8 +1,9 @@
-import React, { useGlobal, useEffect } from 'reactn'
+import React, { getGlobal, useGlobal, useEffect, useState } from 'reactn'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import {
+  Avatar,
   CssBaseline,
   Drawer,
   Box,
@@ -10,10 +11,13 @@ import {
   AppBar,
   Toolbar,
   List,
+  Menu,
+  MenuItem,
   Typography,
   Divider,
   IconButton,
   Badge,
+  ListItem,
   Container,
   Grid,
   Paper,
@@ -24,19 +28,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 
 import { mainListItems, secondaryListItems } from './Menu'
-
-function Copyright () {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://www.otzii.com/'>
-        ŌTZII
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../Copyright'
+import { logout } from '../../utils/auth'
 
 const drawerWidth = 240
 
@@ -99,6 +92,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   appBarSpacer: theme.mixins.toolbar,
+  logo: { width: drawerWidth / 2, height: 'auto' },
   content: {
     flexGrow: 1,
     height: '100vh',
@@ -122,20 +116,31 @@ const useStyles = makeStyles(theme => ({
 const withLayout = Page => {
   return () => {
     const classes = useStyles()
-    const [open, setOpen] = React.useState(true)
+
+    const [open, setOpen] = useState(true)
+    const [isMenuOpen, setMenuOpen] = useState(null)
     const router = useRouter()
     const [user, setUser] = useGlobal('user')
-    const logout = () => {
-      setUser(null)
-      router.push('/signin')
-    }
+    const firstLetter = user ? user.email[0].toUpperCase() : '?'
+    const { pageName } = getGlobal()
+
     const handleDrawerOpen = () => {
       setOpen(true)
     }
+
     const handleDrawerClose = () => {
       setOpen(false)
     }
+
+    const handleAvatarClick = event => {
+      setMenuOpen(event.currentTarget)
+    }
+
+    const handleClose = () => {
+      setMenuOpen(null)
+    }
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
+
     return (
       <div className={classes.root}>
         <AppBar
@@ -162,14 +167,32 @@ const withLayout = Page => {
               noWrap
               className={classes.title}
             >
-              Commandes
+              {pageName}
             </Typography>
             <IconButton color='inherit'>
               <Badge badgeContent={4} color='secondary'>
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <Button onClick={logout}>LOGOUT</Button>
+            <Avatar
+              aria-controls='simple-menu'
+              aria-haspopup='true'
+              onClick={handleAvatarClick}
+            >
+              {firstLetter}
+            </Avatar>
+            <Menu
+              id='simple-menu'
+              anchorEl={isMenuOpen}
+              keepMounted
+              open={Boolean(isMenuOpen)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={() => router.push('/profile')}>
+                Mon profil
+              </MenuItem>
+              <MenuItem onClick={logout}>Déconnexion</MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -183,6 +206,12 @@ const withLayout = Page => {
             <IconButton onClick={handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>
+
+            <ListItem>
+              <Link href='/'>
+                <img className={classes.logo} src='/otzii_black.png' />
+              </Link>
+            </ListItem>
           </div>
           <Divider />
           <List>{mainListItems}</List>

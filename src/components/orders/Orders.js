@@ -11,20 +11,18 @@ import {
 
 import API from '../../utils/api.js'
 
-export default () => {
-  const formatter = new Intl.DateTimeFormat('fr-FR', {
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  })
-  const [orders, setOrders] = useState([])
-  useEffect(() => {
-    async function fetchData () {
-      const orders = await API.get('/orders')
-      setOrders(orders)
-    }
-  }, [])
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric'
+})
+const currencyFormatter = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR'
+})
+
+export default ({ orders }) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -39,13 +37,17 @@ export default () => {
         <TableBody>
           {orders.map(o => (
             <TableRow key={o._id}>
-              <TableCell>{formatter.format(new Date(o.createdAt))}</TableCell>
+              <TableCell>
+                {dateFormatter.format(new Date(o.createdAt))}
+              </TableCell>
               <TableCell>{o.type}</TableCell>
               <TableCell>{o.status}</TableCell>
               <TableCell>
-                {o.items.reduce(
-                  (total, cur) => total + cur.price * cur.quantity,
-                  0
+                {currencyFormatter.format(
+                  o.items.reduce(
+                    (total, cur) => total + cur.price * cur.quantity,
+                    0
+                  ) / 100
                 )}
               </TableCell>
             </TableRow>

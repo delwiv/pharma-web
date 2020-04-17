@@ -1,4 +1,4 @@
-import React, { useGlobal, useState } from 'reactn'
+import React, { addCallback, useGlobal, useState, useDispatch } from 'reactn'
 import { useRouter } from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -14,20 +14,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 
-import { login } from '../utils/auth'
-
-function Copyright () {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://material-ui.com/'>
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
+import Copyright from '../components/Copyright'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -60,10 +47,11 @@ const errors = {
 export default function SignIn () {
   const classes = useStyles()
 
-  const [user, setUser] = useGlobal('user')
+  const login = useDispatch('login')
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState()
+  const [error, setError] = useState(null)
 
   const handleError = reason => {
     const message = errors[reason] || errors.generic
@@ -82,9 +70,10 @@ export default function SignIn () {
   const handleSubmit = async e => {
     e.preventDefault()
     setError(null)
-    const result = await login({ email, password })
-    console.log({ login: result })
-    if (result.error) return handleError(result.error)
+    const { user, loginError } = await login({ email, password })
+    //console.log({ user, loginError })
+    if (loginError) return handleError(loginError)
+    console.log('push /orders')
     router.push('/orders')
   }
 
@@ -97,16 +86,16 @@ export default function SignIn () {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign in
+          Connexion
         </Typography>
-        <form className={classes.form} noValidate>
+        <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <TextField
             variant='outlined'
             margin='normal'
             required
             fullWidth
             id='email'
-            label='Email Address'
+            label='Email'
             name='email'
             autoComplete='email'
             autoFocus
@@ -118,7 +107,7 @@ export default function SignIn () {
             required
             fullWidth
             name='password'
-            label='Password'
+            label='Mot de passe'
             type='password'
             id='password'
             autoComplete='current-password'
@@ -134,11 +123,12 @@ export default function SignIn () {
             variant='contained'
             color='primary'
             onClick={handleSubmit}
+            type='submit'
             className={classes.submit}
           >
-            Sign In
+            Connexion
           </Button>
-          <Grid container>
+          {/*<Grid container>
             <Grid item xs>
               <Link href='#' variant='body2'>
                 Forgot password?
@@ -149,7 +139,7 @@ export default function SignIn () {
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
-          </Grid>
+          </Grid>*/}
         </form>
       </div>
       <Box mt={8}>

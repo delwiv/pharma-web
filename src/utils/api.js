@@ -1,3 +1,4 @@
+import { getGlobal } from 'reactn'
 import qs from 'query-string'
 import fetch from 'isomorphic-unfetch'
 
@@ -15,12 +16,13 @@ const parseResponse = async data => {
 }
 
 const makeRequest = async ({ route, method, data }) => {
-  const token = await get('token')
+  console.log(getGlobal(), 'api')
+  const token = getGlobal().token
   return fetch(`${API_URL}${route}`, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token || '798f17d8-6d34-4571-8d58-00a8dacf0e6f'}`
+      Authorization: token && `Bearer ${token}`
     },
     method,
     body: data && JSON.stringify(data)
@@ -32,5 +34,8 @@ export default {
     const query = data ? `?${qs.stringify(data)}` : ''
     return makeRequest({ route: route + query, method: 'GET' })
   },
-  post: (route, data) => makeRequest({ route, data, method: 'POST' })
+  post: (route, data) => makeRequest({ route, data, method: 'POST' }),
+  delete: (route, data) => makeRequest({ route, data, method: 'DELETE' }),
+  put: (route, data) => makeRequest({ route, data, method: 'PUT' }),
+  patch: (route, data) => makeRequest({ route, data, method: 'PATCH' })
 }
