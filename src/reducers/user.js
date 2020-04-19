@@ -1,5 +1,6 @@
 import { addReducer } from 'reactn'
 
+import { set, del } from '../utils/storage.js'
 import api from '../utils/api.js'
 
 addReducer('loginError', (global, dispatch, loginError) => ({
@@ -18,10 +19,12 @@ addReducer('login', async (global, dispatch, creds) => {
 
   console.log({ user, token, error })
   if (error) return { loginError: error }
-  return { user, token, loginError: null }
+  await set('token', token)
+  return { user, loginError: null }
 })
 
 addReducer('logout', async (global, dispatch) => {
   await api.post('/users/logout').catch(() => {})
-  return { token: null, user: null }
+  await del('token')
+  return { user: null }
 })

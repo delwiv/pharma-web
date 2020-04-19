@@ -6,25 +6,22 @@ import React, {
   useState
 } from 'reactn'
 import router from 'next/router'
+import useSWR from 'swr'
 
 import Loader from '../components/Loader'
 import api from '../utils/api'
+import { isClient } from '../utils/misc.js'
 
-class Index extends Component {
-  async componentDidMount () {
-    const { user, error } = await api.get('/users/me')
-    if (error) {
-      return router.push('/login')
-    }
-    if (user) {
-      const route = getGlobal().wantedRoute || '/orders'
-      console.log({ indexWantedRoute: route })
-      return router.push(route)
-    }
+const Index = () => {
+  const { data, error } = useSWR('/users/me', api.get)
+  if (error) {
+    router.push('/login')
   }
-
-  render () {
-    return <Loader withLogo={true} />
+  if (data) {
+    const route = getGlobal().wantedRoute || '/orders'
+    router.push(route)
   }
+  return <Loader withLogo={true} />
 }
+
 export default Index

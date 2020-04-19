@@ -1,4 +1,11 @@
-import React, { getGlobal, useGlobal, useEffect, useState } from 'reactn'
+import React, {
+  getGlobal,
+  useGlobal,
+  useEffect,
+  useState,
+  useDispatch
+} from 'reactn'
+import { useSnackbar } from 'notistack'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
@@ -119,10 +126,23 @@ const withLayout = Page => {
 
     const [open, setOpen] = useState(true)
     const [isMenuOpen, setMenuOpen] = useState(null)
+
     const router = useRouter()
+
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+
     const [user, setUser] = useGlobal('user')
-    const firstLetter = user ? user.email[0].toUpperCase() : '?'
-    const { pageName } = getGlobal()
+    const [pageName] = useGlobal('pageName')
+    const [wsMessage] = useGlobal('wsMessage')
+
+    const flushMessage = useDispatch('flushMessage')
+    if (wsMessage) {
+      const { type, data } = wsMessage
+      enqueueSnackbar(type)
+      flushMessage()
+    }
+
+    const firstLetter = user ? user.name[0].toUpperCase() : '?'
 
     const handleDrawerOpen = () => {
       setOpen(true)

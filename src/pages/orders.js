@@ -1,4 +1,5 @@
-import React, { getGlobal, useEffect, useDispatch, useState } from 'reactn'
+import { useDispatch, useGlobal } from 'reactn'
+import useSWR from 'swr'
 
 import api from '../utils/api'
 import OrdersComponent from '../components/orders/Orders'
@@ -6,19 +7,9 @@ import Loader from '../components/Loader'
 import withLayout from '../components/layout/Layout'
 
 const Orders = () => {
-  const [isLoading, setLoading] = useState(true)
   const fetchOrders = useDispatch('fetchOrders')
-  useEffect(() => {
-    async function fetchData () {
-      await fetchOrders()
-      setLoading(false)
-    }
-    fetchData()
-  }, [])
-  return isLoading ? (
-    <Loader />
-  ) : (
-    <OrdersComponent orders={getGlobal().orders} />
-  )
+  const [orders] = useGlobal('orders')
+  const { data } = useSWR('/users/me/orders', fetchOrders)
+  return orders ? <OrdersComponent orders={orders} /> : <Loader />
 }
 export default withLayout(Orders)

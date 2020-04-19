@@ -2,6 +2,7 @@ import React, { Component } from 'reactn'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
+import { SnackbarProvider } from 'notistack'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
 import theme from '../theme'
@@ -45,9 +46,10 @@ class MyApp extends Component {
           />
         </Head>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
+          <SnackbarProvider>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </SnackbarProvider>
         </ThemeProvider>
       </React.Fragment>
     )

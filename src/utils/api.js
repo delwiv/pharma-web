@@ -16,8 +16,7 @@ const parseResponse = async data => {
 }
 
 const makeRequest = async ({ route, method, data }) => {
-  console.log(getGlobal(), 'api')
-  const token = getGlobal().token
+  const token = await get('token')
   return fetch(`${API_URL}${route}`, {
     headers: {
       Accept: 'application/json',
@@ -26,7 +25,8 @@ const makeRequest = async ({ route, method, data }) => {
     },
     method,
     body: data && JSON.stringify(data)
-  }).then(parseResponse)
+    //}).then(parseResponse)
+  }).then(response => response.json())
 }
 
 export default {

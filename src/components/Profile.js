@@ -4,11 +4,8 @@ import {Paper} from '@material-ui/core
 const Profile = ({user}) => {
   const handle = e => {}
   return (
-
   <Paper>
-  
     <h1>Infos</h1>
-
         <form  noValidate>
           <TextField
             variant='outlined'
@@ -66,3 +63,5 @@ const Profile = ({user}) => {
 
   )
 }
+
+export default Profile

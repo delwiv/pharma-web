@@ -1,20 +1,26 @@
-import React, {useEffect, useState} from 'reactn'
 import router from 'next/router'
+import { Button } from '@material-ui/core'
+import BackIcon from '@material-ui/icons/NavigateBefore'
+import useSWR from 'swr'
 
+import api from '../../utils/api.js'
 import withLayout from '../../components/layout/Layout.js'
 import Loader from '../../components/Loader.js'
 
 const Order = () => {
-  const [order, setOrder] = useState(null)
-      const {orderId} = router.query
-      console.log({orderId})
-  useEffect(() => {
-    const getOrder = async () => {
-    }
-    getOrder()
-  })
-  return !order ? <Loader /> : (<h1>Commande {orderId}</h1>
-
+  const { orderId } = router.query
+  const handleBack = () => router.push('/orders')
+  const { data } = useSWR(`/users/me/orders/${orderId}`, api.get)
+  return data ? (
+    <div>
+      <Button variant='contained' startIcon={<BackIcon />} onClick={handleBack}>
+        Retour
+      </Button>
+      <h1>Commande n°{orderId}</h1>
+      <pre>{JSON.stringify(data.order, null, 2)}</pre>
+    </div>
+  ) : (
+    <Loader />
   )
 }
 

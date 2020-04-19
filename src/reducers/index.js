@@ -1,2 +1,3 @@
-import './orders'
-import './user'
+import './orders.js'
+import './user.js'
+import './websocket.js'

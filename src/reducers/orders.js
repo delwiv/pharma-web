@@ -2,12 +2,22 @@ import { addReducer } from 'reactn'
 
 import api from '../utils/api.js'
 
-addReducer('ordersError', (global, dispatch, error) => ({
-  ordersError: error
-}))
+addReducer('newOrder', (global, dispatch, order) => {
+  console.log({ order })
+  return { orders: [{ ...order, isNew: true }, ...global.orders] }
+})
 
-addReducer('fetchOrders', async (global, dispatch, ...params) => {
+//addReducer('ordersError', (global, dispatch, error) => ({
+//  ordersError: error
+//}))
+//
+addReducer('fetchOrders', async (global, dispatch, { filters } = {}) => {
   const { error, orders } = await api.get('/users/me/orders')
   if (error) return { ordersError: error }
   return { orders }
+})
+
+addReducer('fetchOrder', async (global, dispatch, orderId) => {
+  const { error, order } = await api.get(`/users/me/orders/${orderId}`)
+  return { order, orderError: error }
 })
