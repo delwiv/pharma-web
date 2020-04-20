@@ -13,6 +13,7 @@ import {
   Avatar,
   CssBaseline,
   Drawer,
+  SwipeableDrawer,
   Box,
   Button,
   AppBar,

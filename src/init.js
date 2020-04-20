@@ -47,7 +47,7 @@ const init = async () => {
   }
   if (user) {
     setGlobal({ user, wsSessionId })
-    registerSessionId(wsSessionId)
+    registerSessionId({ wsSessionId, userId: user._id })
   }
 }
 export default init

@@ -10,7 +10,7 @@ import Loader from '../../components/Loader.js'
 const Order = () => {
   const { orderId } = router.query
   const handleBack = () => router.push('/orders')
-  const { data } = useSWR(`/users/me/orders/${orderId}`, api.get)
+  const { data } = useSWR(`/orders/${orderId}`, api.get)
   return data ? (
     <div>
       <Button variant='contained' startIcon={<BackIcon />} onClick={handleBack}>

@@ -12,12 +12,12 @@ addReducer('newOrder', (global, dispatch, order) => {
 //}))
 //
 addReducer('fetchOrders', async (global, dispatch, { filters } = {}) => {
-  const { error, orders } = await api.get('/users/me/orders')
+  const { error, orders } = await api.get('/orders')
   if (error) return { ordersError: error }
   return { orders }
 })
 
 addReducer('fetchOrder', async (global, dispatch, orderId) => {
-  const { error, order } = await api.get(`/users/me/orders/${orderId}`)
+  const { error, order } = await api.get(`/orders/${orderId}`)
   return { order, orderError: error }
 })

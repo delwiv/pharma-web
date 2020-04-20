@@ -9,7 +9,7 @@ import withLayout from '../components/layout/Layout'
 const Orders = () => {
   const fetchOrders = useDispatch('fetchOrders')
   const [orders] = useGlobal('orders')
-  const { data } = useSWR('/users/me/orders', fetchOrders)
+  const { data } = useSWR('/orders', fetchOrders)
   return orders ? <OrdersComponent orders={orders} /> : <Loader />
 }
 export default withLayout(Orders)
