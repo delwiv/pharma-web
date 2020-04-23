@@ -6,7 +6,7 @@ import api from '../utils/api.js'
 addReducer('loginError', (global, dispatch, loginError) => ({
   loginError,
   user: null,
-  token: null
+  token: null,
 }))
 addReducer('fetchMe', async (global, dispatch, ...params) => {
   const { error, user } = await api.get('/users/me')

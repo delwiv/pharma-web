@@ -4,7 +4,10 @@ import api from '../utils/api.js'
 
 addReducer('newOrder', (global, dispatch, order) => {
   console.log({ order })
-  return { orders: [{ ...order, isNew: true }, ...global.orders] }
+  order.isNew = true
+  return {
+    orders: [order, ...global.orders],
+  }
 })
 
 //addReducer('ordersError', (global, dispatch, error) => ({
@@ -18,6 +21,13 @@ addReducer('fetchOrders', async (global, dispatch, { filters } = {}) => {
 })
 
 addReducer('fetchOrder', async (global, dispatch, orderId) => {
-  const { error, order } = await api.get(`/orders/${orderId}`)
-  return { order, orderError: error }
+  const { error, order, actions } = await api.get(`/orders/${orderId}`)
+  return { order, actions, orderError: error }
+})
+
+addReducer('orderAction', async (global, dispatch, orderId, action) => {
+  const { error, order, actions } = await api.put(
+    `/orders/${orderId}/${action}`
+  )
+  return { orderError: error, order, actions }
 })

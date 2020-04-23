@@ -1,7 +1,13 @@
 {
-"extends": ['standard', "prettier"],
-"plugins": ["prettier"],
-"rules": {
-"prettier/prettier": "error"
-}
+  "extends": [
+    "standard",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "space-before-function-paren": "never",
+    "prettier/prettier": "error"
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "actions": {
+    "accept": "Accepter",
+    "refuse": "Refuser",
+    "suggestChange": "Suggérer des modifications"
+  },
+  "statuses": {
+    "short": {
+      "new": "Nouveau",
+      "seen": "Vue",
+      "accepted": "Acceptée"
+    },
+    "long": {
+      "new": "Nouvelle commande",
+      "seen": "Vue par le pharmacien",
+      "accepted": "Acceptée par le pharmacien"
+    }
+  }
+}

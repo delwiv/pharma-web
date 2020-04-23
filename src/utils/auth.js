@@ -4,7 +4,7 @@ import router from 'next/router'
 import { set, del } from './storage.js'
 import api from './api'
 
-export const login = async creds => {
+export const login = async (creds) => {
   const { user, token, error } = await api.post('/users/login', creds)
 
   console.log({ user, token, error })

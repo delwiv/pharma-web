@@ -6,7 +6,7 @@ import { get } from './storage'
 
 const API_URL = 'http://localhost:3003/api'
 
-const parseResponse = async data => {
+const parseResponse = async (data) => {
   try {
     const result = await data.json()
     return result
@@ -21,12 +21,12 @@ const makeRequest = async ({ route, method, data }) => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: token && `Bearer ${token}`
+      Authorization: token && `Bearer ${token}`,
     },
     method,
-    body: data && JSON.stringify(data)
+    body: data && JSON.stringify(data),
     //}).then(parseResponse)
-  }).then(response => response.json())
+  }).then((response) => response.json())
 }
 
 export default {
@@ -37,5 +37,5 @@ export default {
   post: (route, data) => makeRequest({ route, data, method: 'POST' }),
   delete: (route, data) => makeRequest({ route, data, method: 'DELETE' }),
   put: (route, data) => makeRequest({ route, data, method: 'PUT' }),
-  patch: (route, data) => makeRequest({ route, data, method: 'PATCH' })
+  patch: (route, data) => makeRequest({ route, data, method: 'PATCH' }),
 }

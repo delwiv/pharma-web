@@ -15,18 +15,15 @@ const pageNames = {
   '/login': 'Connexion',
   '/orders': 'Commandes',
   '/orders/[orderId]': 'Détails commande',
-  '/profile': 'Mon profil'
+  '/profile': 'Mon profil',
 }
 
-const updatePageName = url => {
+const updatePageName = (url) => {
   setGlobal({ pageName: pageNames[url] })
 }
 
 const init = async () => {
-  setGlobal({
-    user: null,
-    wsMessage: null
-  })
+  setGlobal({ appStarted: true })
   const wantedRoute = router.pathname
 
   router.events.on('routeChangeStart', updatePageName)

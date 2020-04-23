@@ -7,7 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -17,20 +17,21 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', {
   month: 'numeric',
   day: 'numeric',
   hour: 'numeric',
-  minute: 'numeric'
-})
-const currencyFormatter = new Intl.NumberFormat('fr-FR', {
-  style: 'currency',
-  currency: 'EUR'
+  minute: 'numeric',
 })
 
-const useStyles = makeStyles(theme => ({
+const currencyFormatter = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+})
+
+const useStyles = makeStyles((theme) => ({
   row: {
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   newRow: {
-    backgroundColor: '#7D5B6A'
-  }
+    backgroundColor: '#7D5B6A',
+  },
 }))
 
 export default ({ orders }) => {
@@ -47,10 +48,10 @@ export default ({ orders }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map(o => (
+          {orders.map((o) => (
             <Link key={o._id} href='/orders/[orderId]' as={`/orders/${o._id}`}>
               <TableRow
-                className={o.isNew ? classes.newRow : classes.row}
+                className={o.status === 'new' ? classes.newRow : classes.row}
                 hover={true}
               >
                 <TableCell>

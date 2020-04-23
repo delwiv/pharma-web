@@ -1,0 +1,18 @@
+{
+    "actions": {
+      "accept": "Accept",
+      "refuse": "Refuse"
+    },
+    "statuses": {
+      "short": {
+        "new": "Nouveau",
+        "seen": "Vue",
+        "accepted": "Acceptée"
+      },
+      "long": {
+        "new": "Nouvelle commande",
+        "seen": "Vue par le pharmacien",
+        "accepted": "Acceptée par le pharmacien"
+      }
+    }
+}

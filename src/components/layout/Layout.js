@@ -3,7 +3,7 @@ import React, {
   useGlobal,
   useEffect,
   useState,
-  useDispatch
+  useDispatch,
 } from 'reactn'
 import { useSnackbar } from 'notistack'
 import clsx from 'clsx'
@@ -29,55 +29,58 @@ import {
   Container,
   Grid,
   Paper,
-  Link
+  Link,
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import NotificationsIcon from '@material-ui/icons/Notifications'
+import VisibilityIcon from '@material-ui/icons/Visibility'
 
+import { isClient } from '../../utils/misc.js'
+import Chat from '../chat/Chat.js'
 import { mainListItems, secondaryListItems } from './Menu'
 import Copyright from '../Copyright'
 import { logout } from '../../utils/auth'
 
 const drawerWidth = 240
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
+    paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 8px',
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: 'none'
+    display: 'none',
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   drawerPaper: {
     position: 'relative',
@@ -85,43 +88,47 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerPaperClose: {
     overflowX: 'hidden',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9)
-    }
+      width: theme.spacing(9),
+    },
   },
   appBarSpacer: theme.mixins.toolbar,
   logo: { width: drawerWidth / 2, height: 'auto' },
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'auto'
+    overflow: 'auto',
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   paper: {
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240
-  }
+    height: 240,
+  },
 }))
 
-const withLayout = Page => {
+const messageTypes = {
+  newOrder: 'Nouvelle commande !',
+}
+
+const withLayout = (Page) => {
   return () => {
     const classes = useStyles()
 
@@ -137,13 +144,32 @@ const withLayout = Page => {
     const [wsMessage] = useGlobal('wsMessage')
 
     const flushMessage = useDispatch('flushMessage')
+
     if (wsMessage) {
-      const { type, data } = wsMessage
-      enqueueSnackbar(type)
+      const {
+        type,
+        data: { order },
+      } = wsMessage
+      enqueueSnackbar(messageTypes[type], {
+        variant: 'success',
+        action: (key) => (
+          <Button
+            startIcon={<VisibilityIcon />}
+            onClick={() => {
+              router.push('/orders/[orderId]', `/orders/${order._id}`)
+              closeSnackbar(key)
+            }}
+          >
+            Voir
+          </Button>
+        ),
+      })
       flushMessage()
     }
 
-    const firstLetter = user ? user.name[0].toUpperCase() : '?'
+    const initials = user
+      ? `${user.firstName[0]}${user.lastName[0]}`.toUpperCase()
+      : '?'
 
     const handleDrawerOpen = () => {
       setOpen(true)
@@ -153,7 +179,7 @@ const withLayout = Page => {
       setOpen(false)
     }
 
-    const handleAvatarClick = event => {
+    const handleAvatarClick = (event) => {
       setMenuOpen(event.currentTarget)
     }
 
@@ -200,7 +226,7 @@ const withLayout = Page => {
               aria-haspopup='true'
               onClick={handleAvatarClick}
             >
-              {firstLetter}
+              {initials}
             </Avatar>
             <Menu
               id='simple-menu'
@@ -219,7 +245,7 @@ const withLayout = Page => {
         <Drawer
           variant='permanent'
           classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
           }}
           open={open}
         >
@@ -244,6 +270,7 @@ const withLayout = Page => {
           <Container maxWidth='lg' className={classes.container}>
             <Grid container spacing={3}>
               <Page />
+              <Chat />
             </Grid>
             <Box pt={4}>
               <Copyright />
