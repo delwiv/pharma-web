@@ -6,7 +6,7 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.9.1",
     "clsx": "latest",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "isomorphic-unfetch": "^3.0.0",
     "next": "latest",
     "next-i18next": "https://github.com/isaachinman/next-i18next#refs/heads/use-rewrites",
